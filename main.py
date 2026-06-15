@@ -1,9 +1,8 @@
 import sys
 import threading
-import ctypes
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLabel, QPushButton, QTextEdit, QMessageBox)
-from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, pyqtSignal, QObject, QThread
 from optimizer import PCOptimizer
 
@@ -24,7 +23,6 @@ class EntityPlaysOptimizer(QMainWindow):
         self.thread = None
         self.is_optimizing = False
         self.init_ui()
-        self.check_admin()
     
     def init_ui(self):
         """Initialize the UI"""
@@ -126,7 +124,7 @@ class EntityPlaysOptimizer(QMainWindow):
         main_layout.addLayout(button_layout)
         
         # Footer
-        footer = QLabel("⚠️  Administrator privileges required for full optimization | Restart your PC after optimization")
+        footer = QLabel("⚠️  Run as Administrator for full optimization | Restart your PC after optimization")
         footer.setFont(QFont("Arial", 9))
         footer.setStyleSheet("color: #FF6B6B;")
         footer.setAlignment(Qt.AlignCenter)
@@ -134,6 +132,10 @@ class EntityPlaysOptimizer(QMainWindow):
         
         main_widget.setLayout(main_layout)
         self.setCentralWidget(main_widget)
+        
+        # Show initial message
+        self.add_log("Welcome to EntityPlays PC Optimizer!")
+        self.add_log("Click 'START OPTIMIZATION' to begin.\n")
     
     def get_stylesheet(self):
         """Get main stylesheet"""
@@ -194,15 +196,6 @@ class EntityPlaysOptimizer(QMainWindow):
                 background: #222222;
             }
         """
-    
-    def check_admin(self):
-        """Check if running as admin"""
-        is_admin = ctypes.windll.shell.IsUserAnAdmin()
-        if not is_admin:
-            self.add_log("⚠️  WARNING: Not running as Administrator!")
-            self.add_log("Some optimizations may fail or be skipped.")
-            self.add_log("Please restart the application as Administrator.")
-            self.add_log("")
     
     def add_log(self, message):
         """Add message to log display"""
